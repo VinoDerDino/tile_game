@@ -2,13 +2,14 @@ require "core.engine.object"
 require "game"
 require "core.engine.container"
 require "core.engine.sprite"
-require "core.loadingbar"
+require "core.engine.camera"
 require "core.engine.controller"
+require "core.loadingbar"
 require "core.game.player"
+require "core.game.world"
 require "core.ui.uicomponent"
 require "core.ui.label"
 require "core.ui.button"
-require "core.game.world"
 
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -39,4 +40,9 @@ end
 
 function love.joystickaxis(joystick, axis, value)
     if game.Objects.controller then game.Objects.controller:joystickaxis(joystick, axis, value) end
+end
+
+function love.resize(w, h)
+    game.args.w = w
+    game.args.h = h
 end

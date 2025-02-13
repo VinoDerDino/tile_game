@@ -30,6 +30,7 @@ function Game:init()
     }
 
     self.Objects = {
+        camera = nil,
         player = nil,
         controller = nil,
         debug_menue = nil
@@ -91,6 +92,7 @@ function Game:create_debug()
 end
 
 function Game:set_obj()
+    self.Objects.camera = Camera()
     self.Objects.player = Player()
     self.Objects.controller = Controller()
 
@@ -114,7 +116,7 @@ end
 
 function Game:update(dt)
 
-    self.args.daytime = self.args.daytime + dt * 0.02
+    self.args.daytime = self.args.daytime + dt * 0.1
     if self.args.daytime >= 24 then
         self.args.daytime = 0
     end
@@ -150,13 +152,16 @@ function Game:update(dt)
 
     self.Objects.player:update(dt)
     self.Objects.controller:update(dt)
+    if self.Objects.controller.con.axis[3] ~= 0 or self.Objects.controller.con.axis[4] ~= 0 then
+        self.Objects.camera:setPos(self.Objects.player.args.pos.x - self.args.w / 2 + self.Objects.controller.con.axis[3] * 100, self.Objects.player.args.pos.y - self.args.h / 2 + self.Objects.controller.con.axis[4] * 100)
+    else
+        self.Objects.camera:setPos(self.Objects.player.args.pos.x - self.args.w / 2, self.Objects.player.args.pos.y - self.args.h / 2)
+    end
 
-    if self.Scenes.loadingbar.is then
-        self.Scenes.loadingbar.o:update(dt)
-    elseif self.Scenes.menue.is then
-        self.Scenes.menue.o:update(dt)
-    elseif self.Scenes.level.is then
-        self.Scenes.level.o:update(dt)
+    for _, scene in pairs(self.Scenes) do
+        if scene.is then
+            scene.o:update()
+        end
     end
 end
 
@@ -168,10 +173,13 @@ function Game:draw()
     elseif self.Scenes.menue.is then
         self.Scenes.menue.o:draw()
     elseif self.Scenes.level.is then
+        self.Objects.camera:apply()
         self.Scenes.level.o:draw()
+        self.Objects.player:draw()
+        self.Objects.camera:clear()
     end
 
-    self.Objects.player:draw()
+    
     if self.states.debug then
         self.Objects.debug_menue:draw()
     end

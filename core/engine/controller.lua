@@ -11,7 +11,7 @@ function Controller:init()
     }
     self.con = {
         button = {},
-        axis = {}
+        axis = {0, 0, 0, 0}
     }
     self.visible = true
 end
@@ -29,6 +29,7 @@ end
 
 function Controller:gamepadpressed(joystick, button)
     self.con.buttons[button] = true
+    love.mouse.setVisible(false)
 end
 
 function Controller:joystickaxis(joystick, axis, value)
@@ -36,12 +37,13 @@ function Controller:joystickaxis(joystick, axis, value)
         self.con.axis[axis] = 0
         return 
     end
+    love.mouse.setVisible(false)
     self.con.axis[axis] = value
-    print(self.con.axis[axis])
 end
 
 function Controller:keyPressed(key)
     self.keys[key] = true
+    love.mouse.setVisible(true)
 end
 
 function Controller:keyReleased(key)

@@ -9,14 +9,14 @@ return {
             type = "linear",
             frame_time = 0.01,
             frames = {
-                {0, 0}
+                {0, 0},{0, 0},
             }
         },
         { -- Idle north
             type = "linear",
             frame_time = 0.01,
             frames = {
-                {0, 1}
+                {0, 1},{0, 1}
             }
         },
         { -- Walk south
